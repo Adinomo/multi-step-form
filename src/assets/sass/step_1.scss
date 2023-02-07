@@ -1,0 +1,87 @@
+@import "./variables";
+
+.stepOne {
+	height: 550px;
+	width: 450px;
+	position: relative;
+	@include breakpoint(md) {
+	   background-color: white;
+		padding: 30px 30px 0px 30px;
+		width: 100%;
+		height: fit-content!important;
+		margin-top: -120px;
+		border-radius: 8px ;	
+	}
+	&__label {
+		color: $marine_blue;
+		font-family: $font-bold;
+	}
+	p {
+		color: $cool_gray;
+	}
+}
+
+label {
+	font-size: 15px;
+	font-weight: 600;
+	color: $marine_blue;
+}
+
+input[name="name"], input[name="email"], input[name="phone"] {
+	height: 45px;
+	border: 1px solid $light_gray;
+	border-radius: 5px;
+	outline: none;
+	padding: 0px 13px;
+	&::placeholder {
+		color: $cool_gray;
+		font-weight: 600;
+		font-size: 15px;
+	}
+	&:focus {
+		border: 1px solid $marine_blue;
+	}
+}
+
+.personal_form{
+	position: relative;
+	height: 463px;
+}
+
+.button {
+	float: right;
+	border: none;
+	padding: 12px 17px;
+	outline: none;
+	background-color: $marine_blue;
+	color: $white;
+	font-size: 15px;
+	border-radius: 5px;
+	position: absolute;
+	bottom: 0;
+	left: 75.5%;
+	@include breakpoint(md) {
+	   bottom: 15%;	
+	}
+	&:hover {
+		background-color: rgba($marine_blue, 0.9);
+	}
+}
+
+.form-group {
+	position: relative;
+	small {
+		position: absolute;
+		bottom: 45px;
+		left: 65%;
+		font-size: 15px;
+		font-weight: 600;
+		color: $strawberry_red;
+		@include breakpoint(sm) {
+			left: 49%;
+		}
+	}
+	.error{
+		border-color: $strawberry_red;
+	}
+}

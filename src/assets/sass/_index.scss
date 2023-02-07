@@ -1,0 +1,39 @@
+@import './variables';
+
+body{
+	background-color: $magnolia;
+}
+*{
+	font-family: $font;
+}
+.container-fluid{
+	background-color: white;
+	height: fit-content;
+	@include breakpoint(md) {
+		background-color: transparent;
+		width: 100%!important;
+		padding: 0!important;
+		margin-top: 0!important;
+	}
+	width: fit-content;
+	padding: 15px;
+	padding-right: 20px;
+	border-radius: 10px;
+}
+.content{
+	margin-left: 10px;
+   padding-bottom: 0;
+	@include breakpoint(md) {
+		margin-left: 0;
+	}
+	@include breakpoint(sm) {
+		padding: 20px!important;
+	}
+	
+}
+.form_app{
+	@include breakpoint(md) {
+		flex-direction: column!important;
+		width: 100%!important;
+	}
+}

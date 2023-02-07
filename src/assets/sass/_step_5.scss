@@ -1,0 +1,16 @@
+@import './variables';
+
+.final{
+	width: 450px;
+	height: 550px;
+	@include breakpoint(md) {	
+		@include responsive;
+	}
+	h3{
+		font-family: $font-bold;
+		color: $marine_blue;
+	}
+	p{
+		color: $cool_gray;
+	}
+}

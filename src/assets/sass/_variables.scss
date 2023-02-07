@@ -1,0 +1,47 @@
+//primary colors
+$marine_blue: hsl(213, 96%, 18%);
+$purlish_blue: hsl(243, 100%, 62%);
+$pastel_blue: hsl(228, 100%, 84%);
+$light_blue: hsl(206, 94%, 87%);
+$strawberry_red: hsl(354, 84%, 57%);
+
+//Neutral colors
+$cool_gray: hsl(231, 11%, 63%);
+$light_gray: hsl(229, 24%, 87%);
+$magnolia: hsl(217, 100%, 97%);
+$alabaster: hsl(231, 100%, 99%);
+$white: hsl(0, 0%, 100%);
+
+@font-face {
+	font-family: "Ubuntu";
+	src: url('../fonts/Ubuntu-Regular.ttf');
+}
+
+@font-face {
+	font-family: "Ubuntu-bold";
+	src: url('../fonts/Ubuntu-Bold.ttf');
+}
+
+$font: "Ubuntu";
+$font-bold: "Ubuntu-bold";
+
+@mixin breakpoint($point) {
+	@if $point == md {
+		@media (max-width: 65em) {
+			@content;
+		}
+	}
+	@if $point == sm {
+		@media (max-width: 480px) {
+			@content;
+		}
+	}
+}
+
+@mixin responsive {
+	width: 100%;
+	background-color: white;
+	padding: 30px 30px 15px 30px;
+	border-radius: 8px;
+	margin-top: -120px;
+}
