@@ -124,6 +124,7 @@ function Step_3({ form, setForm, prevStep, nextStep }) {
 					<input
 						type="checkbox"
 						name="custom_profile"
+						className="check_box"
 						id="custom"
 						onChange={handleCheckChange}
 						checked={form.custom_profile}
