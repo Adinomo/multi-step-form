@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import "../assets/sass/_step_3.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { setStatus, setPrice } from "../redux/slice/step3Slice";
 
-function Step_3({ form, setForm, prevStep, nextStep }) {
-	const [checkPrice, setCheckPrice] = useState({
-		online: 1,
-		storage: 2,
-		custom: 2,
+function Step_3({ prevStep, nextStep }) {
+	const [addonsForm, setAddonsForm] = useState({
+		online_service: false,
+		larger_storage: false,
+		custom_profile: false,
 	});
 
-	const [bill, setBill] = useState("");
-
+	const dispatch = useDispatch();
+	const billing = useSelector((state) => state.step2.billing);
+	const addOns = useSelector((state) => state.step3);
 
 	const handleCheckChange = (event) => {
-		const { name, value, type, checked } = event.target;
-		setForm((prev) => {
+		const { name, checked } = event.target;
+		setAddonsForm((prev) => {
 			return {
 				...prev,
 				[name]: checked,
@@ -22,49 +25,27 @@ function Step_3({ form, setForm, prevStep, nextStep }) {
 	};
 
 	useEffect(() => {
-		if (form.billing === "monthly") {
-			setBill("mo")
-			setCheckPrice((prev) => {
-				return {
-					...prev,
-					online: 1,
-					storage: 2,
-					custom: 2,
-				};
-			});
+	  dispatch(setStatus({ status: addonsForm }));
+	}, [addonsForm])
+	
 
-			setForm((prev) => {
-				return {
-					...prev,
-					online_service_price: 1,
-					larger_storage_price: 2,
-					custom_profile_price: 2,
-				};
-			});
+	useEffect(() => {
+		if (billing === "monthly") {
+			dispatch(
+				setPrice({
+					price: { online_service: 1, larger_storage: 2, custom_profile: 2 },
+				}),
+			);
 		}
 
-		if (form.billing === "yearly") {
-			setBill("yr");
-			setCheckPrice((prev) => {
-				return {
-					...prev,
-					online: 10,
-					storage: 20,
-					custom: 20,
-				};
-			});
-
-			setForm((prev) => {
-				return {
-					...prev,
-					online_service_price: 10,
-					larger_storage_price: 20,
-					custom_profile_price: 20,
-				};
-			});
+		if (billing === "yearly") {
+			dispatch(
+				setPrice({
+					price: { online_service: 10, larger_storage: 20, custom_profile: 20 },
+				}),
+			);
 		}
-	}, [form.billing]);
-
+	}, [billing]);
 
 	return (
 		<div className="add_ons">
@@ -75,8 +56,8 @@ function Step_3({ form, setForm, prevStep, nextStep }) {
 				<label
 					className="check_group"
 					style={{
-						backgroundColor: form.online_service && "hsl(217, 100%, 97%)",
-						borderColor: form.online_service && "hsl(243, 100%, 62%)",
+						backgroundColor: addonsForm.online_service && "hsl(217, 100%, 97%)",
+						borderColor: addonsForm.online_service && "hsl(243, 100%, 62%)",
 					}}
 					htmlFor="online">
 					<input
@@ -85,19 +66,21 @@ function Step_3({ form, setForm, prevStep, nextStep }) {
 						id="online"
 						className="check_box"
 						onChange={handleCheckChange}
-						checked={form.online_service}
+						checked={addonsForm.online_service}
 					/>
 					<div className="check_details">
 						<h6>Online service</h6>
 						<p>Access to multiplayer games</p>
 					</div>
-					<span>{`+$${checkPrice.online}/${bill}`}</span>
+					<span>{`+$${addOns.price.online_service}/${
+						billing === "monthly" ? "mo" : "yr"
+					}`}</span>
 				</label>
 				<label
 					className="check_group"
 					style={{
-						backgroundColor: form.larger_storage && "hsl(217, 100%, 97%)",
-						borderColor: form.larger_storage && "hsl(243, 100%, 62%)",
+						backgroundColor: addonsForm.larger_storage && "hsl(217, 100%, 97%)",
+						borderColor: addonsForm.larger_storage && "hsl(243, 100%, 62%)",
 					}}
 					htmlFor="larger">
 					<input
@@ -106,19 +89,21 @@ function Step_3({ form, setForm, prevStep, nextStep }) {
 						id="larger"
 						className="check_box"
 						onChange={handleCheckChange}
-						checked={form.larger_storage}
+						checked={addonsForm.larger_storage}
 					/>
 					<div className="check_details">
 						<h6>Larger storage</h6>
 						<p>Extra 1TB of cloud save</p>
 					</div>
-					<span>{`+$${checkPrice.storage}/${bill}`}</span>
+					<span>{`+$${addOns.price.larger_storage}/${
+						billing === "monthly" ? "mo" : "yr"
+					}`}</span>
 				</label>
 				<label
 					className="check_group"
 					style={{
-						backgroundColor: form.custom_profile && "hsl(217, 100%, 97%)",
-						borderColor: form.custom_profile && "hsl(243, 100%, 62%)",
+						backgroundColor: addonsForm.custom_profile && "hsl(217, 100%, 97%)",
+						borderColor: addonsForm.custom_profile && "hsl(243, 100%, 62%)",
 					}}
 					htmlFor="custom">
 					<input
@@ -127,13 +112,15 @@ function Step_3({ form, setForm, prevStep, nextStep }) {
 						className="check_box"
 						id="custom"
 						onChange={handleCheckChange}
-						checked={form.custom_profile}
+						checked={addonsForm.custom_profile}
 					/>
 					<div className="check_details">
 						<h6>Customizable Profile</h6>
 						<p>Custom theme on your profile</p>
 					</div>
-					<span>{`+$${checkPrice.custom}/${bill}`}</span>
+					<span>{`+$${addOns.price.custom_profile}/${
+						billing === "monthly" ? "mo" : "yr"
+					}`}</span>
 				</label>
 			</form>
 

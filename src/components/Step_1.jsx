@@ -1,18 +1,32 @@
 import React, { useState} from 'react';
 import '../assets/sass/step_1.scss';
 import validator from 'validator';
+import { useSelector, useDispatch } from "react-redux";
+import { addForm } from '../redux/slice/step1Slice.js'
 
-function Step_1({ form, setForm, nextStep }) {
+
+function Step_1({ nextStep }) {
+	const [formData, setFormData] = useState({
+		name: "",
+		email: "",
+		phone: "",
+	})
 	const [formError, setFormError] = useState(false);
-	const [ferror, setFerror] = useState({ })
+	const [ferror, setFerror] = useState({ });
+
+	const dispatch = useDispatch();
+
+	const form = useSelector(state => state.step1);
+
 	const handleChange = (event) => {
-		const { name, value, type, checked} = event.target
-		setForm(prev => {
+		const { name, value } = event.target
+		setFormData(prev => {
 			return{
 				...prev,
 				[name]: value
 			}
-		})
+		});
+		dispatch(addForm({ form: formData }));
 	}
 	
 	
@@ -21,19 +35,9 @@ function Step_1({ form, setForm, nextStep }) {
 
 		let error = {}
 
-		if (
-			validator.isEmpty(form.name) ||
-			validator.isEmpty(form.email) ||
-			validator.isEmpty(form.phone)
-		) {
-			setFormError(true);
-		} else {
-			nextStep()
-		}
-
 		if(validator.isEmpty(form.name)){
 			error.name = "This field is required"
-		}
+		}		
 
 		if (validator.isEmpty(form.email)) {
 			error.email = "This field is required";
@@ -44,7 +48,16 @@ function Step_1({ form, setForm, nextStep }) {
 		}
 
 		setFerror({ ...error })
-		
+
+		if (
+			validator.isEmpty(form.name) ||
+			validator.isEmpty(form.email) ||
+			validator.isEmpty(form.phone)
+		) {
+			setFormError(true);
+		} else {
+			nextStep();
+		}		
 
 	}
    
@@ -62,7 +75,7 @@ function Step_1({ form, setForm, nextStep }) {
 						type="text"
 						placeholder="e.g.Stephen King"
 						name="name"
-						value={form.name}
+						value={formData.name}
 						onChange={handleChange}
 					/>
 					<small>{ferror.name}</small>
@@ -74,7 +87,7 @@ function Step_1({ form, setForm, nextStep }) {
 						type="email"
 						placeholder="e.g.stephenking@lorem.com"
 						name="email"
-						value={form.email}
+						value={formData.email}
 						onChange={handleChange}
 					/>
 					<small>{ferror.email}</small>
@@ -83,10 +96,10 @@ function Step_1({ form, setForm, nextStep }) {
 					<label>Phone Number</label>
 					<input
 						className={ferror.phone && "error"}
-						type="number"
+						type="text"
 						placeholder="e.g. +1 234 567 890"
 						name="phone"
-						value={form.number}
+						value={formData.number}
 						onChange={handleChange}
 					/>
 					<small>{ferror.phone}</small>

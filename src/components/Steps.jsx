@@ -26,7 +26,7 @@ function Steps({step}) {
 				</div>
 			</div>
 			<div className="step__container mt-5 mx-4">
-				<div className={4 === step || 5 === step ? "step__active" : "step__level"}>4</div>
+				<div className={4 === step ? "step__active" : "step__level"}>4</div>
 				<div className="step__details">
 					<p>STEP 4</p>
 					<p>SUMMARY</p>
