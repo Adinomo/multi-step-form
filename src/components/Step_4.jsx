@@ -1,52 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import '../assets/sass/_step_4.scss';
+import { useDispatch, useSelector } from 'react-redux'
 
-function Step_4({ form, nextStep, prevStep, changePlan }) {
-   const [abbrev, setAbbrev] = useState("");
-	const [bill, setBill] = useState("")
+
+function Step_4({ nextStep, prevStep, changePlan }) {
 	const [sumTotal, setSumTotal] = useState(0)
+
+	const billing = useSelector((state) => state.step2.billing);
+	const addOns = useSelector((state) => state.step3);
+	const plan = useSelector((state) => state.step2);
 	
 	function getTotal() {
-		let total = form.plan_price;
-		if(form.online_service){
-			total = total + form.online_service_price;
+		let total = plan.price;
+		if(addOns.status.online_service){
+			total += addOns.price.online_service;
 		}
 
-		if(form.larger_storage){
-			total = total + form.larger_storage_price;
+		if(addOns.status.larger_storage){
+			total += addOns.price.larger_storage;
 		}
 
-		if(form.custom_profile){
-			total = total + form.custom_profile_price;
+		if(addOns.status.custom_profile){
+			total += addOns.price.custom_profile;
 		}
 
 		setSumTotal(total);
 	}
-
-	useEffect(() => {
-		if (form.billing === "monthly") {
-			setAbbrev("mo");
-			setBill("month");
-		}
-
-		if (form.billing === "yearly") {
-			setAbbrev("yr");
-			setBill("year")
-		}
-
-	}, [form.billing])
 	
 	useEffect(() => {
 		getTotal();
-	},[form.online_service]);
-
-	useEffect(() => {
-		getTotal();
-	}, [form.larger_storage]);
-
-   useEffect(() => {
-		getTotal();
-	}, [form.custom_profile]);
+	}, [
+		addOns.price.online_service,
+		addOns.price.larger_storage,
+		addOns.price.larger_storage,
+	]);
 	
 	return (
 		<div className="summary">
@@ -55,35 +42,35 @@ function Step_4({ form, nextStep, prevStep, changePlan }) {
 			<div className="summary_list">
 				<div className="summary_plan d-flex justify-content-between">
 					<div className="summary_billing">
-						<p className="text-capitalize">{`${form.plan} (${form.billing})`}</p>
+						<p className="text-capitalize">{`${plan.plan} (${billing})`}</p>
 						<small onClick={() => changePlan()}>Change</small>
 					</div>
-					<div className="price">{`$${form.plan_price}/${abbrev}`}</div>
+					<div className="price">{`$${plan.price}/${billing === "monthly" ? "mo" : "yr"}`}</div>
 				</div>
 				<div className="summary_addons mt-3">
-					{form.online_service && (
+					{addOns.status.online_service && (
 						<div className="d-flex justify-content-between order">
 							<p>Online service</p>
-							<p>{`+$${form.online_service_price}/${abbrev}`}</p>
+							<p>{`+$${addOns.price.online_service}/${billing === "monthly" ? "mo" : "yr"}`}</p>
 						</div>
 					)}
-					{form.larger_storage && (
+					{addOns.status.larger_storage && (
 						<div className="d-flex justify-content-between order">
 							<p>Larger storage</p>
-							<p>{`+$${form.larger_storage_price}/${abbrev}`}</p>
+							<p>{`+$${addOns.price.larger_storage}/${billing === "monthly" ? "mo" : "yr"}`}</p>
 						</div>
 					)}
-					{form.custom_profile && (
+					{addOns.status.custom_profile && (
 						<div className="d-flex justify-content-between order">
 							<p>Customizable profile</p>
-							<p>{`+$${form.custom_profile_price}/${abbrev}`}</p>
+							<p>{`+$${addOns.price.custom_profile}/${billing === "monthly" ? "mo" : "yr"}`}</p>
 						</div>
 					)}
 				</div>
 			</div>
 			<div className="total d-flex justify-content-between">
-				<p>Total(per {bill})</p>
-				<p>{`+$${sumTotal}/${abbrev}`}</p>
+				<p>{`Total(per ${billing})`}</p>
+				<p>{`+$${sumTotal}/${billing === "monthly" ? "mo" : "yr"}`}</p>
 			</div>
 			<div className="step_control_4 d-flex justify-content-between">
 				<p onClick={() => prevStep()}>Go Back</p>

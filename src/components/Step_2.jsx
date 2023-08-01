@@ -1,70 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../assets/sass/_step_2.scss";
 import arcade from "../assets/images/icon-arcade.svg";
 import advanced from "../assets/images/icon-advanced.svg";
 import pro from "../assets/images/icon-pro.svg";
+import { useDispatch, useSelector } from 'react-redux';
+import { addPlan, addBilling, addPrice, setToggle } from '../redux/slice/step2Slice';
 
-function Step_2({ form, setForm, prevStep, nextStep }) {
-   const [currentPlan, setCurrentPlan] = useState("arcade");
-	const [toggle, setToggle] = useState(true);
+function Step_2({ prevStep, nextStep }) {
 	const [count, setCount] = useState(0);
-	const [price, setPrice] = useState({
+
+	const price = useRef({
 		arcade: 9,
       advanced: 12,
 		pro: 15
 	});
 
-   const handlePlan = (event) => {
-	   setCurrentPlan(event.target.id);
+	const dispatch = useDispatch(); 
+	const plan = useSelector(state => state.step2);
 
-		setForm(prev => {
-			return {
-				...prev,
-				plan: event.target.id
-			}
-		});
+   const handlePlan = (event) => {
+		const { id } = event.target
+		dispatch(addPlan({ plan: id }))
 
 		setCount((prev) => prev + 1);
 
    }
 
    useEffect(() => {
-      let currPrice = {}
-		if (toggle) {
-			setForm(prev => {
-				return {
-					...prev,
-					billing: "monthly"
-				}
-			});
+		if (plan.toggle) {
+			dispatch(addBilling({ billing: "monthly" }))
 
-			setPrice(prev => {
-				return {
-               ...prev,
-					arcade: 9,
-					advanced: 12,
-					pro: 15
-				}
-			});
-
+			price.current = {
+				arcade: 9,
+				advanced: 12,
+				pro: 15,
+			};
 		}
 
-		if (!toggle) {
-			setForm((prev) => {
-				return {
-					...prev,
-					billing: "yearly",
-				};
-			});
+		if (!plan.toggle) {
+			dispatch(addBilling({ billing: "yearly" }));
 
-			setPrice((prev) => {
-				return {
-					...prev,
-					arcade: 90,
-					advanced: 120,
-					pro: 150,
-				};
-			});
+			price.current = {
+				arcade: 90,
+				advanced: 120,
+				pro: 150,
+			};
 		}
 
    setPlanPrices();
@@ -72,58 +52,28 @@ function Step_2({ form, setForm, prevStep, nextStep }) {
    }, [count])
 
    function setPlanPrices() {
-	   if (currentPlan === "arcade" && toggle) {
-			setForm(prev => {
-				return{
-               ...prev,
-				   plan_price: 9
-				}
-			});
+	   if (plan.plan === "arcade" && plan.toggle) {
+			dispatch(addPrice({ price: 9 }));
 		}
 
-		if (currentPlan === "arcade" && !toggle) {
-			setForm(prev => {
-				return{
-               ...prev,
-				   plan_price: 90
-				}
-			});
+		if (plan.plan === "arcade" && !plan.toggle) {
+			dispatch(addPrice({ price: 90 }));
 		}
 
-		if (currentPlan === "advanced" && toggle) {
-			setForm(prev => {
-				return{
-               ...prev,
-				   plan_price: 12
-				}
-			});
+		if (plan.plan === "advanced" && plan.toggle) {
+			dispatch(addPrice({ price: 12 }));
 		}
 
-		if (currentPlan === "advanced" && !toggle) {
-			setForm((prev) => {
-				return {
-					...prev,
-					plan_price: 120,
-				};
-			});
+		if (plan.plan === "advanced" && !plan.toggle) {
+			dispatch(addPrice({ price: 120 }));
 		}
 
-		if (currentPlan === "pro" && toggle) {
-			setForm((prev) => {
-				return {
-					...prev,
-					plan_price: 15,
-				};
-			});
+		if (plan.plan === "pro" && plan.toggle) {
+			dispatch(addPrice({ price: 15 }));
 		}
 
-		if (currentPlan === "pro" && !toggle) {
-			setForm((prev) => {
-				return {
-					...prev,
-					plan_price: 150,
-				};
-			});
+		if (plan.plan === "pro" && !plan.toggle) {
+			dispatch(addPrice({ price: 150 }));
 		}
 	}
 
@@ -136,8 +86,8 @@ function Step_2({ form, setForm, prevStep, nextStep }) {
 					className="plan__group"
 					id="arcade"
 					style={{
-						border: currentPlan === "arcade" && "1px solid hsl(243, 100%, 62%)",
-						backgroundColor: currentPlan === "arcade" && "hsl(217, 100%, 97%)",
+						border: plan.plan === "arcade" && "1px solid hsl(243, 100%, 62%)",
+						backgroundColor: plan.plan === "arcade" && "hsl(217, 100%, 97%)",
 					}}
 					onClick={handlePlan}>
 					<input
@@ -151,14 +101,14 @@ function Step_2({ form, setForm, prevStep, nextStep }) {
 						alt="arcade"
 					/>
 					<label htmlFor="arcade">Arcade</label>
-					<p>{`$${price.arcade}/${toggle ? "mo" : "yr"}`}</p>
+					<p>{`$${price.current.arcade}/${plan.toggle ? "mo" : "yr"}`}</p>
 				</div>
 				<div
 					className="plan__group"
 					id="advanced"
 					style={{
-						border: "advanced" === currentPlan && "1px solid hsl(243, 100%, 62%)",
-						backgroundColor: currentPlan === "advanced" && "hsl(217, 100%, 97%)",
+						border: "advanced" === plan.plan && "1px solid hsl(243, 100%, 62%)",
+						backgroundColor: plan.plan === "advanced" && "hsl(217, 100%, 97%)",
 					}}
 					onClick={handlePlan}>
 					<input
@@ -172,14 +122,14 @@ function Step_2({ form, setForm, prevStep, nextStep }) {
 						alt="advanced"
 					/>
 					<label htmlFor="advanced">Advanced</label>
-					<p>{`$${price.advanced}/${toggle ? "mo" : "yr"}`}</p>
+					<p>{`$${price.current.advanced}/${plan.toggle ? "mo" : "yr"}`}</p>
 				</div>
 				<div
 					className="plan__group"
 					id="pro"
 					style={{
-						border: "pro" === currentPlan && "1px solid hsl(243, 100%, 62%)",
-						backgroundColor: currentPlan === "pro" && "hsl(217, 100%, 97%)",
+						border: "pro" === plan.plan && "1px solid hsl(243, 100%, 62%)",
+						backgroundColor: plan.plan === "pro" && "hsl(217, 100%, 97%)",
 					}}
 					onClick={handlePlan}>
 					<input
@@ -193,16 +143,16 @@ function Step_2({ form, setForm, prevStep, nextStep }) {
 						alt="pro"
 					/>
 					<label htmlFor="pro">Pro</label>
-					<p>{`$${price.pro}/${toggle ? "mo" : "yr"}`}</p>
+					<p>{`$${price.current.pro}/${plan.toggle ? "mo" : "yr"}`}</p>
 				</div>
 			</form>
 			<div className="billing d-flex justify-content-center">
 				<p>Monthly</p>
 				<div className="toggle">
 					<div
-						className={toggle ? "toggle__button" : "toggle__active"}
+						className={plan.toggle ? "toggle__button" : "toggle__active"}
 						onClick={() => {
-							setToggle(!toggle);
+							dispatch(setToggle({ toggle: !plan.toggle }))
 							setCount((prev) => prev + 1);
 						}}></div>
 				</div>

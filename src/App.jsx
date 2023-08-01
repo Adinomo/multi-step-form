@@ -10,23 +10,6 @@ import Step_5 from "./components/Step_5";
 
 function App() {
 	const [step, setStep] = useState(1);
-	const [formData, setFormData] = useState({
-		name: "",
-		email: "",
-		phone: "",
-		plan: "arcade",
-		billing: "monthly",
-		plan_price: 9,
-      online_service: false,
-		online_service_price: 0,
-      larger_storage: false,
-		larger_storage_price: 0,
-      custom_profile: false,
-		custom_profile_price: 0
-	});
-
-	console.log(formData);
-	console.log(step)
 
 	const prevStep = () => {
 		setStep((prev) => prev - 1);
@@ -43,21 +26,17 @@ function App() {
 	const renderStep = (param) => {
 		switch (param) {
 			case 1:
-				return <Step_1 form={formData} setForm={setFormData} nextStep={() => nextStep()} />;
+				return <Step_1 nextStep={() => nextStep()} />;
 			case 2:
 				return (
 					<Step_2
-						form={formData}
-						setForm={setFormData}
-						prevStep={() => prevStep()}
+					   prevStep={() => prevStep()}
 						nextStep={() => nextStep()}
 					/>
 				);
 			case 3:
 				return (
 				   <Step_3
-					   form={formData}
-						setForm={setFormData}
 						prevStep={() => prevStep()} 
 				      nextStep={() => nextStep()} 
 					/>
@@ -65,7 +44,6 @@ function App() {
 			case 4:
 				return (
 				   <Step_4 
-					   form={formData}
 						prevStep={() => prevStep()}
 					   nextStep={() => nextStep()} 
 						changePlan={() => changePlan()}
